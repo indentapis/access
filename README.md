@@ -37,9 +37,10 @@ Visit https://access.new to request access on the web, or https://indent.com/set
 
 ## Quick Start
 
-If you're on Mac, you can install via Homebrew: _(in progress, pending [Homebrew PR](https://github.com/Homebrew/homebrew-core/pull/1))_
+If you're on Mac, you can install via Homebrew: _(in progress Homebrew PR)_
 
 ```bash
+brew tap indentapis/homebrew-access
 brew install access
 ```
 
