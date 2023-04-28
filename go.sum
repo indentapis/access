@@ -777,6 +777,8 @@ go.etcd.io/etcd/client/v2 v2.305.6/go.mod h1:BHha8XJGe8vCIBfWBpbBLVZ4QjOIlfoouvO
 go.etcd.io/etcd/client/v3 v3.5.6/go.mod h1:f6GRinRMCsFVv9Ht42EyY7nfsVGwrNO0WEoS2pRKzQk=
 go.indent.com/indent-go v1.0.0 h1:ReRD7eZU3rCwE0dSTTZEFXDQ1hLiezGgIG8cbEitxRM=
 go.indent.com/indent-go v1.0.0/go.mod h1:cPYA9iBRBwTfCzXZ0ZBlqMAfnLoxROIYNlRuFyAzQOU=
+go.indent.com/indent-go v1.0.1 h1:u9o2zNiEF11465J+Tgbd7feRkkiD4s5+wBLiIdzqyTA=
+go.indent.com/indent-go v1.0.1/go.mod h1:cPYA9iBRBwTfCzXZ0ZBlqMAfnLoxROIYNlRuFyAzQOU=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.opencensus.io v0.22.2/go.mod h1:yxeiOL68Rb0Xd1ddK5vPZ/oVn4vY4Ynel7k9FzqtOIw=
