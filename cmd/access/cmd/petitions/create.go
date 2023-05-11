@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
@@ -26,6 +27,7 @@ func NewCreateOptions() *CreateOptions {
 				},
 			},
 		},
+		Output: cliutil.OutputJSON,
 	}
 }
 
@@ -33,6 +35,7 @@ func NewCreateOptions() *CreateOptions {
 type CreateOptions struct {
 	*indentv1.CreatePetitionRequest
 	ResourceNames []string
+	Interactive   bool
 	Output        string
 }
 
@@ -56,9 +59,12 @@ func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 				},
 			}
 
-			// set petitioner
+			// set petitioner and prompt for missing fields
 			petitioner := f.CurrentUser(cmd.Context())
 			opts.Petition.Petitioners[0] = petitioner
+			if len(opts.Petition.Reason) < common.MinLenReason {
+				opts.Petition.Reason = promptForReason(logger, opts)
+			}
 
 			// create petition
 			petition, err := client.CreatePetition(cmd.Context(), opts.CreatePetitionRequest)
@@ -70,28 +76,63 @@ func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 			// print output
 			if opts.Output == "name" {
 				fmt.Println(petition.Name)
+			} else if opts.Output == cliutil.OutputJSON {
+				f.OutputJSON(petition)
 			}
 		},
 	}
 
 	flags := cmd.Flags()
 	flags.StringArrayVar(&opts.ResourceNames, "resources", opts.ResourceNames, "names of resources being requested")
-	flags.StringVar(&opts.Output, "output", opts.Output, "format that should be output")
+	flags.BoolVar(&opts.Interactive, "interactive", opts.Interactive, "whether to prompt for missing fields")
+	flags.StringVar(&opts.Output, "output", opts.Output, "format that should be output (can be 'name' or 'json')")
 	flags.StringVar(&opts.Petition.Reason, "reason", opts.Output, "reason Petition is being created")
 	return cmd
 }
 
-func resolveResources(ctx context.Context, f cliutil.Factory, options *CreateOptions) (resources []*auditv1.Resource) {
+func resolveResources(ctx context.Context, f cliutil.Factory, opts *CreateOptions) (resources []*auditv1.Resource) {
+	logger := f.Logger()
+
+	// prompt for resource if interactive`
+	if len(opts.ResourceNames) == 0 {
+		if !opts.Interactive {
+			logger.Fatal("No resources specified and not interactive")
+		}
+		resource := f.SelectResource(ctx, common.ViewRequestable)
+		return []*auditv1.Resource{resource}
+	}
+
 	client := f.API(ctx).Resources()
-	for _, resourceName := range options.ResourceNames {
+	for _, resourceName := range opts.ResourceNames {
 		resource, err := client.GetResource(ctx, &indentv1.GetResourceRequest{
 			SpaceName:    f.Config().Space,
 			ResourceName: resourceName,
 		})
 		if err != nil {
-			f.Logger().Fatal("Failed to resolve resource", zap.Error(err), zap.String("resourceName", resourceName))
+			logger.Fatal("Failed to resolve resource", zap.Error(err), zap.String("resourceName", resourceName))
 		}
 		resources = append(resources, resource)
 	}
 	return
+}
+
+func promptForReason(logger *zap.Logger, opts *CreateOptions) string {
+	if !opts.Interactive {
+		logger.Fatal("Invalid reason specified and not interactive", zap.String("reason", opts.Petition.Reason))
+	}
+	prompt := &promptui.Prompt{
+		Label: "Reason",
+		Validate: func(s string) error {
+			if len(s) < common.MinLenReason {
+				return fmt.Errorf("reason must be at least %d characters", common.MinLenReason)
+			}
+			return nil
+		},
+	}
+
+	reason, err := prompt.Run()
+	if err != nil {
+		logger.Fatal("Failed to prompt for reason", zap.Error(err))
+	}
+	return reason
 }

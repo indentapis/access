@@ -8,12 +8,19 @@ import (
 	"go.indent.com/indent-go/pkg/cliutil"
 )
 
-const (
-	numPetitionsList = 20
-)
+// NewListOptions returns a new ListOptions.
+func NewListOptions() *ListOptions {
+	return &ListOptions{}
+}
+
+// ListOptions are the options for listing Petitions.
+type ListOptions struct {
+	Output string
+}
 
 // NewCmdList returns a command allowing users to list Petitions.
 func NewCmdList(f cliutil.Factory) *cobra.Command {
+	opts := NewListOptions()
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List Petitions",
@@ -29,15 +36,23 @@ func NewCmdList(f cliutil.Factory) *cobra.Command {
 				logger.Fatal("Failed to list Petitions", zap.Error(err))
 			}
 
-			for i, pet := range petitions.GetPetitions() {
-				logger.Info("Petition", zap.Any("petition", pet))
+			if opts.Output == cliutil.OutputJSON {
+				f.OutputJSON(petitions)
+				return
+			}
 
-				if i > numPetitionsList {
-					break
-				}
+			s, err := cliutil.NewSelect(petitions.GetPetitions())
+			if err != nil {
+				logger.Fatal("Failed to create select", zap.Error(err))
+			} else if result, err := s.Run(); err != nil {
+				logger.Fatal("Failed to run select", zap.Error(err))
+			} else {
+				f.OutputJSON(result)
 			}
 		},
 	}
 
+	flags := cmd.Flags()
+	flags.StringVar(&opts.Output, "output", opts.Output, "Output format (can be 'json')")
 	return cmd
 }

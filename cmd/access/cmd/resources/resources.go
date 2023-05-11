@@ -16,6 +16,7 @@ func NewCmdResources(f cliutil.Factory) *cobra.Command {
 such as pulling.`,
 	}
 	cmd.AddCommand(NewCmdCreate(f))
+	cmd.AddCommand(NewCmdList(f))
 	cmd.AddCommand(NewCmdPull(f))
 	return cmd
 }

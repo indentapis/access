@@ -19,6 +19,7 @@ func NewRoot() *cobra.Command {
 	}
 	f, config := cliutil.New(rootCmd)
 	rootCmd.AddCommand(NewCmdInit(f))
+	rootCmd.AddCommand(NewCmdNew(f))
 	rootCmd.AddCommand(auth.NewCmdAuth(f))
 	rootCmd.AddCommand(configcmd.NewCmdConfig(f))
 	rootCmd.AddCommand(petitions.NewCmdPetitions(f))
@@ -27,6 +28,7 @@ func NewRoot() *cobra.Command {
 	flags := rootCmd.PersistentFlags()
 	flags.StringVar(&config.Space, "space", config.Space, "Space to perform operations in")
 	flags.BoolVar(&config.Staging, "staging", config.Staging, "Use staging environment for request")
+	flags.BoolVar(&config.Headless, "headless", config.Headless, "Run in headless mode (no browser login prompt)")
 	f.Setup()
 	return rootCmd
 }
