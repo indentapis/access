@@ -6,9 +6,11 @@ require (
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
-	go.indent.com/indent-go v1.0.2
+	go.indent.com/indent-go v1.0.3
 	go.uber.org/zap v1.24.0
 )
+
+replace k8s.io/apimachinery v0.26.1 => github.com/indentinc/apimachinery v0.0.0-20220303210610-038787720cef
 
 require (
 	cloud.google.com/go/compute v1.14.0 // indirect
@@ -17,6 +19,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
