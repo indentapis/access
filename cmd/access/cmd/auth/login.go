@@ -21,9 +21,9 @@ func NewCmdLogin(f cliutil.Factory) *cobra.Command {
 			opts.OAuth = f.Config().Environment.OAuth
 
 			store := f.Store()
-			if err := store.Login(cmd.Context(), opts); err != nil {
+			if err := store.Login(opts); err != nil {
 				logger.Fatal("Failed to login", zap.Error(err))
-			} else if err = store.UpdateUserInfo(cmd.Context()); err != nil {
+			} else if err = store.UpdateUserInfo(); err != nil {
 				logger.Fatal("Failed to get userinfo", zap.Error(err))
 			}
 			logger.Info("Login successful")
