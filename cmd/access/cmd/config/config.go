@@ -10,8 +10,9 @@ import (
 // NewCmdConfig returns a set of commands used to modify configuration.
 func NewCmdConfig(f cliutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "config",
-		Short: "Make changes to access configuration",
+		Use:     "config",
+		Aliases: []string{"cf"},
+		Short:   "Make changes to access configuration",
 	}
 	cmd.AddCommand(NewCmdSet(f))
 	return cmd

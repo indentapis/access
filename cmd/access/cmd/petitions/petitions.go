@@ -15,8 +15,9 @@ import (
 // NewCmdPetitions returns a set of commands allowing users manage Petitions.
 func NewCmdPetitions(f cliutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "petitions",
-		Short: "Open new Petitions and perform operations on them",
+		Use:     "petitions",
+		Aliases: []string{"pt"},
+		Short:   "Open new Petitions and perform operations on them",
 		Long: `Allows for the creation of Petitions and performing activities such
 such as denying, approving, and revoking.`,
 	}

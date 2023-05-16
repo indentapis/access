@@ -10,8 +10,9 @@ import (
 // NewCmdAuth returns a set of commands used to configure authorization.
 func NewCmdAuth(f cliutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Perform operations related to Indent authentication",
+		Use:     "auth",
+		Aliases: []string{"at"},
+		Short:   "Perform operations related to Indent authentication",
 	}
 	cmd.AddCommand(NewCmdLogin(f))
 	cmd.AddCommand(NewCmdView(f))

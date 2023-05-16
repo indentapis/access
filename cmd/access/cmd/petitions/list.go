@@ -53,6 +53,6 @@ func NewCmdList(f cliutil.Factory) *cobra.Command {
 	}
 
 	flags := cmd.Flags()
-	flags.StringVar(&opts.Output, "output", opts.Output, "Output format (can be 'json')")
+	flags.StringVarP(&opts.Output, "output", "o", opts.Output, "Output format (can be 'json')")
 	return cmd
 }

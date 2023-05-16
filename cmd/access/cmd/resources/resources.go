@@ -10,8 +10,9 @@ import (
 // NewCmdResources returns a set of commands allowing management of Resources.
 func NewCmdResources(f cliutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "resources",
-		Short: "Manage Resources within a space",
+		Use:     "resources",
+		Aliases: []string{"rs"},
+		Short:   "Manage Resources within a space",
 		Long: `Allows for management of Resources including activities such
 such as pulling.`,
 	}

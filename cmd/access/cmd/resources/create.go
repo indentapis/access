@@ -66,6 +66,6 @@ func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 
 	flags := cmd.Flags()
 	flags.StringVar(&opts.Resource.DisplayName, "displayName", opts.Resource.DisplayName, "Display name of Resource")
-	flags.StringVar(&opts.Output, "output", opts.Output, "format that should be output")
+	flags.StringVarP(&opts.Output, "output", "o", opts.Output, "format that should be output")
 	return cmd
 }

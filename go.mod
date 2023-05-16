@@ -6,7 +6,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
-	go.indent.com/indent-go v1.0.3
+	go.indent.com/indent-go v1.0.4
 	go.uber.org/zap v1.24.0
 )
 
