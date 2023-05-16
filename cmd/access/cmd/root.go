@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 
 	"go.indent.com/access/cmd/access/cmd/auth"
 	configcmd "go.indent.com/access/cmd/access/cmd/config"
@@ -12,12 +13,12 @@ import (
 )
 
 // NewRoot returns a new root command.
-func NewRoot() *cobra.Command {
+func NewRoot(logger *zap.Logger) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "access",
 		Short: "Manages the Indent platform",
 	}
-	f, config := cliutil.New(rootCmd)
+	f, config := cliutil.New(logger, rootCmd)
 	rootCmd.AddCommand(NewCmdInit(f))
 	rootCmd.AddCommand(NewCmdNew(f))
 	rootCmd.AddCommand(auth.NewCmdAuth(f))
@@ -26,8 +27,9 @@ func NewRoot() *cobra.Command {
 	rootCmd.AddCommand(resources.NewCmdResources(f))
 
 	flags := rootCmd.PersistentFlags()
-	flags.StringVar(&config.Space, "space", config.Space, "Space to perform operations in")
+	flags.StringVarP(&config.Space, "space", "s", config.Space, "Space to perform operations in")
 	flags.BoolVar(&config.Staging, "staging", config.Staging, "Use staging environment for request")
+	flags.BoolVarP(&config.Verbose, "verbose", "v", config.Verbose, "Include debug messages and additional context in logs")
 	flags.BoolVar(&config.Headless, "headless", config.Headless, "Run in headless mode (no browser login prompt)")
 	f.Setup()
 	return rootCmd

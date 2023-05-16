@@ -49,7 +49,7 @@ func NewCmdApprove(f cliutil.Factory) *cobra.Command {
 	}
 
 	flags := cmd.Flags()
-	flags.DurationVar(&opts.Duration, "duration", opts.Duration, "Go formatted duration Petition should be approved"+
+	flags.DurationVarP(&opts.Duration, "duration", "d", opts.Duration, "Go formatted duration Petition should be approved"+
 		" (for example '10h' or '1h10m10s')")
 	flags.BoolVar(&opts.Indefinite, "indefinite", opts.Indefinite, "approve Petition indefinitely")
 	return cmd

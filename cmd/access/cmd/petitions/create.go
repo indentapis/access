@@ -39,6 +39,12 @@ type CreateOptions struct {
 	Output        string
 }
 
+// isInteractive if requested or user didn't specify anything.
+func (opts *CreateOptions) isInteractive() bool {
+	return opts.Interactive ||
+		len(opts.ResourceNames) == 0 && opts.Petition.Reason == ""
+}
+
 // NewCmdCreate returns a command allowing users to create a Petition.
 func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 	opts := NewCreateOptions()
@@ -52,6 +58,7 @@ func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 
 			// setup petition
 			opts.SpaceName = f.Config().Space
+			opts.Interactive = opts.isInteractive()
 			opts.Petition.Resources = resolveResources(cmd.Context(), f, opts)
 			opts.Petition.Meta = &auditv1.Meta{
 				Labels: map[string]string{
@@ -84,16 +91,16 @@ func NewCmdCreate(f cliutil.Factory) *cobra.Command {
 
 	flags := cmd.Flags()
 	flags.StringArrayVar(&opts.ResourceNames, "resources", opts.ResourceNames, "names of resources being requested")
-	flags.BoolVar(&opts.Interactive, "interactive", opts.Interactive, "whether to prompt for missing fields")
-	flags.StringVar(&opts.Output, "output", opts.Output, "format that should be output (can be 'name' or 'json')")
-	flags.StringVar(&opts.Petition.Reason, "reason", opts.Output, "reason Petition is being created")
+	flags.BoolVarP(&opts.Interactive, "interactive", "i", opts.Interactive, "whether to prompt for missing fields")
+	flags.StringVarP(&opts.Output, "output", "o", opts.Output, "format that should be output (can be 'name' or 'json')")
+	flags.StringVar(&opts.Petition.Reason, "reason", opts.Petition.Reason, "reason access is being requested")
 	return cmd
 }
 
 func resolveResources(ctx context.Context, f cliutil.Factory, opts *CreateOptions) (resources []*auditv1.Resource) {
 	logger := f.Logger()
 
-	// prompt for resource if interactive`
+	// prompt for resource if interactive
 	if len(opts.ResourceNames) == 0 {
 		if !opts.Interactive {
 			logger.Fatal("No resources specified and not interactive")
