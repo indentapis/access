@@ -41,5 +41,6 @@ jobs:
         with:
           identifier: Indent.Access
           max-versions-to-keep: 5
-          installers-regex: 'windows_[a-z0-9]+\.zip$'
+          # TODO: fix arm64 on winget
+          installers-regex: 'windows_amd64\.zip$'
           token: ${{ secrets.WINGET_TOKEN }}
