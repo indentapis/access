@@ -6,7 +6,7 @@ import (
 )
 
 func newLogger() *zap.Logger {
-	cfg := zap.NewProductionConfig()
+	cfg := zap.NewDevelopmentConfig()
 	cfg.DisableCaller = true
 	cfg.DisableStacktrace = true
 	cfg.Encoding = "console"

@@ -9,6 +9,7 @@ import (
 	configcmd "go.indent.com/access/cmd/access/cmd/config"
 	"go.indent.com/access/cmd/access/cmd/petitions"
 	"go.indent.com/access/cmd/access/cmd/resources"
+	"go.indent.com/access/cmd/access/cmd/tokens"
 	"go.indent.com/indent-go/pkg/cliutil"
 )
 
@@ -25,12 +26,16 @@ func NewRoot(logger *zap.Logger) *cobra.Command {
 	rootCmd.AddCommand(configcmd.NewCmdConfig(f))
 	rootCmd.AddCommand(petitions.NewCmdPetitions(f))
 	rootCmd.AddCommand(resources.NewCmdResources(f))
+	rootCmd.AddCommand(tokens.NewCmdTokens(f))
 
 	flags := rootCmd.PersistentFlags()
 	flags.StringVarP(&config.Space, "space", "s", config.Space, "Space to perform operations in")
 	flags.BoolVar(&config.Staging, "staging", config.Staging, "Use staging environment for request")
 	flags.BoolVarP(&config.Verbose, "verbose", "v", config.Verbose, "Include debug messages and additional context in logs")
 	flags.BoolVar(&config.Headless, "headless", config.Headless, "Run in headless mode (no browser login prompt)")
-	f.Setup()
+
+	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		f.Setup()
+	}
 	return rootCmd
 }
